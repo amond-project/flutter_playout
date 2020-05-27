@@ -181,6 +181,8 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
 
             this.showControls = args.getBoolean("showControls");
 
+            this.fullscreen = args.getBoolean("fullscreen");
+
             initPlayer();
 
         } catch (Exception e) { /* ignore */ }
@@ -205,6 +207,11 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
         System.out.println("setFullScreen");
 
         fullscreenButton = this.findViewById(R.id.exo_fullscreen_icon);
+
+        if (fullscreen) {
+            fullscreenButton.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_fullscreen_close));
+        }
+
         fullscreenButton.setOnClickListener(new View.OnClickListener() {
 
             @SuppressLint("SourceLockedOrientationActivity")
@@ -229,7 +236,7 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
                     e.printStackTrace();
                 }
 
-                if(eventSink != null) {
+                if (eventSink != null) {
                     // Log.d(TAG, "onTime: [time=" + mPlayerView.getCurrentPosition() / 1000 + "]");
                     eventSink.success(message);
                 }
@@ -285,7 +292,6 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
 
 
     }
-
 
 
     private void setupMediaSession() {
@@ -533,7 +539,7 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
          * Check for HLS playlist file extension ( .m3u8 or .m3u )
          * https://tools.ietf.org/html/rfc8216
          */
-        if(this.url.contains(".m3u8") || this.url.contains(".m3u")) {
+        if (this.url.contains(".m3u8") || this.url.contains(".m3u")) {
             videoSource = new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(this.url));
         } else {
             videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(this.url));

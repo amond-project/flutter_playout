@@ -31,6 +31,7 @@ class Video extends StatefulWidget {
   final double position;
   final Function onViewCreated;
   final PlayerState desiredState;
+  final bool fullscreen;
 
   const Video(
       {Key key,
@@ -43,7 +44,8 @@ class Video extends StatefulWidget {
       this.isLiveStream = false,
       this.position = -1,
       this.onViewCreated,
-      this.desiredState = PlayerState.PLAYING})
+      this.desiredState = PlayerState.PLAYING,
+      this.fullscreen = false})
       : super(key: key);
 
   @override
@@ -84,6 +86,7 @@ class _VideoState extends State<Video> {
             "preferredAudioLanguage": widget.preferredAudioLanguage ?? "mul",
             "isLiveStream": widget.isLiveStream,
             "position": widget.position,
+            "fullscreen": widget.fullscreen,
           },
           creationParamsCodec: const JSONMessageCodec(),
           onPlatformViewCreated: (viewId) {

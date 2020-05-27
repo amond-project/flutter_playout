@@ -61,6 +61,7 @@ class _VideoPlayoutState extends State<VideoPlayout>
               isLiveStream: true,
               position: 0,
               url: _url,
+              fullscreen: true,
               onViewCreated: _onViewCreated,
               desiredState: widget.desiredState,
             ),
