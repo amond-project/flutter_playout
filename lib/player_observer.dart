@@ -94,7 +94,7 @@ mixin PlayerObserver {
 
       case "onFullscreen":
         print('FullScreen ${event["fullscreen"]}');
-        onFullscreen(event["fullscreen"] == 'true');
+        onFullscreen(event["fullscreen"]);
         break;
 
       default:
