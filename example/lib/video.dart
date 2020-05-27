@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_playout/multiaudio/HLSManifestLanguage.dart';
 import 'package:flutter_playout/multiaudio/MultiAudioSupport.dart';
 import 'package:flutter_playout/player_observer.dart';
@@ -21,8 +23,12 @@ class VideoPlayout extends StatefulWidget {
 
 class _VideoPlayoutState extends State<VideoPlayout>
     with PlayerObserver, MultiAudioSupport {
-  final String _url = null;
+  final String _url = 'https://contents.amond.io/ko/before_your_eyes_stop/trailer01/Trailer01(FINAL)(0404).m3u8';
   List<HLSManifestLanguage> _hlsLanguages = List<HLSManifestLanguage>();
+
+  static const stream = const EventChannel('com.amond.eventchannelsample/stream');
+
+  StreamSubscription _timerSubscription = null;
 
   @override
   void initState() {
@@ -32,6 +38,7 @@ class _VideoPlayoutState extends State<VideoPlayout>
 
   Future<void> _getHLSManifestLanguages() async {
     if (!Platform.isIOS && _url != null && _url.isNotEmpty) {
+      print('_url $_url');
       _hlsLanguages = await getManifestLanguages(_url);
       setState(() {});
     }
@@ -129,5 +136,11 @@ class _VideoPlayoutState extends State<VideoPlayout>
   void onError(String error) {
     // TODO: implement onError
     super.onError(error);
+  }
+
+  @override
+  void onFullscreen(bool fullscreen) {
+    // TODO: implement onFullscreen
+    super.onFullscreen(fullscreen);
   }
 }

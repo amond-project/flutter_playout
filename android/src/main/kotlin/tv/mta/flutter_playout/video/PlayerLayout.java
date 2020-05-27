@@ -1,5 +1,6 @@
 package tv.mta.flutter_playout.video;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -8,6 +9,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -17,10 +19,14 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Player;
@@ -36,6 +42,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -187,6 +194,47 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
         }
 
         activePlayer = mPlayerView;
+
+        setFullScreen();
+    }
+
+    ImageView fullscreenButton;
+    boolean fullscreen = false;
+
+    private void setFullScreen() {
+        System.out.println("setFullScreen");
+
+        fullscreenButton = this.findViewById(R.id.exo_fullscreen_icon);
+        fullscreenButton.setOnClickListener(new View.OnClickListener() {
+
+            @SuppressLint("SourceLockedOrientationActivity")
+            @Override
+            public void onClick(View view) {
+                System.out.println("fullscreenButton Click");
+                if (fullscreen) {
+                    fullscreenButton.setImageDrawable(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_fullscreen_open));
+
+                    fullscreen = false;
+                } else {
+                    fullscreenButton.setImageDrawable(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_fullscreen_close));
+                    fullscreen = true;
+                }
+
+                JSONObject message = new JSONObject();
+
+                try {
+                    message.put("name", "onFullscreen");
+                    message.put("fullscreen", fullscreen);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(eventSink != null) {
+                    // Log.d(TAG, "onTime: [time=" + mPlayerView.getCurrentPosition() / 1000 + "]");
+                    eventSink.success(message);
+                }
+            }
+        });
     }
 
     @Override
@@ -234,7 +282,11 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
         setupMediaSession();
 
         doBindMediaNotificationManagerService();
+
+
     }
+
+
 
     private void setupMediaSession() {
 
@@ -449,7 +501,7 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
 
                         message.put("time", mPlayerView.getCurrentPosition() / 1000);
 
-                        Log.d(TAG, "onTime: [time=" + mPlayerView.getCurrentPosition() / 1000 + "]");
+                        // Log.d(TAG, "onTime: [time=" + mPlayerView.getCurrentPosition() / 1000 + "]");
                         eventSink.success(message);
                     }
 

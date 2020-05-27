@@ -44,6 +44,8 @@ mixin PlayerObserver {
   /// Override this method to get errors thrown by the player
   void onError(String error) {/* user implementation */}
 
+  void onFullscreen(bool fullscreen) {/* user implementation */}
+
   void _processEvent(dynamic event) async {
     String eventName = event["name"];
 
@@ -88,6 +90,11 @@ mixin PlayerObserver {
 
       case "onError":
         onError(event["error"]);
+        break;
+
+      case "onFullscreen":
+        print('FullScreen ${event["fullscreen"]}');
+        onFullscreen(event["fullscreen"] == 'true');
         break;
 
       default:
