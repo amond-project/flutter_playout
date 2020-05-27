@@ -400,6 +400,8 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
         NotificationCompat.Builder notificationBuilder = PlayerNotificationUtil.from(
                 activity, context, mMediaSessionCompat, mNotificationChannelId);
 
+        notificationBuilder.setSmallIcon(R.drawable.exo_notification_small_icon);
+
         if ((capabilities & PlaybackStateCompat.ACTION_PAUSE) != 0) {
             notificationBuilder.addAction(R.drawable.ic_pause, "Pause",
                     PlayerNotificationUtil.getActionIntent(context, KeyEvent.KEYCODE_MEDIA_PAUSE));
