@@ -28,7 +28,9 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
@@ -39,6 +41,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
@@ -115,6 +118,17 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
     private boolean showControls = false;
 
     private long mediaDuration = 0L;
+
+    //Minimum Video you want to buffer while Playing
+    public final int MIN_BUFFER_DURATION = 2000;
+    //Max Video you want to buffer during PlayBack
+    public final int MAX_BUFFER_DURATION = 5000;
+    //Min Video you want to buffer before start Playing it
+    public final int MIN_PLAYBACK_START_BUFFER = 1500;
+    //Min video You want to buffer when user resumes video
+    public final int MIN_PLAYBACK_RESUME_BUFFER = 2000;
+
+
     /**
      * Whether we have bound to a {@link MediaNotificationManagerService}.
      */
@@ -262,7 +276,16 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
                 trackSelector.buildUponParameters()
                         .setPreferredAudioLanguage(this.preferredAudioLanguage));
 
-        mPlayerView = new SimpleExoPlayer.Builder(context).setTrackSelector(trackSelector).build();
+        LoadControl loadControl = new DefaultLoadControl.Builder()
+                .setAllocator(new DefaultAllocator(true, 16))
+                .setBufferDurationsMs(MIN_BUFFER_DURATION,
+                        MAX_BUFFER_DURATION,
+                        MIN_PLAYBACK_START_BUFFER,
+                        MIN_PLAYBACK_RESUME_BUFFER)
+                .setTargetBufferBytes(-1)
+                .setPrioritizeTimeOverSizeThresholds(true).createDefaultLoadControl();
+
+        mPlayerView = new SimpleExoPlayer.Builder(context).setTrackSelector(trackSelector).setLoadControl(loadControl).build();
 
         mPlayerView.setPlayWhenReady(this.autoPlay);
 
@@ -542,7 +565,7 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
          * https://tools.ietf.org/html/rfc8216
          */
         if (this.url.contains(".m3u8") || this.url.contains(".m3u")) {
-            videoSource = new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(this.url));
+            videoSource = new HlsMediaSource.Factory(dataSourceFactory).setAllowChunklessPreparation(true).createMediaSource(Uri.parse(this.url));
         } else {
             videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(this.url));
         }
