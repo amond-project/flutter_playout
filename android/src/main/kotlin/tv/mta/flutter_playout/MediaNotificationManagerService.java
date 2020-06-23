@@ -36,11 +36,10 @@ public class MediaNotificationManagerService extends Service {
 
     @Override
     public void onDestroy() {
-
         try {
-
-            avPlayer.onDestroy();
-
+            if (avPlayer != null) {
+                avPlayer.onDestroy();
+            }
         } catch (Exception e) { /* ignore */ }
     }
 
@@ -48,11 +47,11 @@ public class MediaNotificationManagerService extends Service {
     public boolean onUnbind(Intent intent) {
 
         try {
+            if (avPlayer != null) {
+                avPlayer.onDestroy();
 
-            avPlayer.onDestroy();
-
-            stopSelf();
-
+                stopSelf();
+            }
         } catch (Exception e) { /* ignore */ }
 
         return false;
@@ -61,14 +60,16 @@ public class MediaNotificationManagerService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
+        if (avPlayer != null) {
+            avPlayer.onDestroy();
 
-        avPlayer.onDestroy();
-
-        stopSelf();
+            stopSelf();
+        }
     }
 
     /**
      * Used to set a player to control the MediaSession for.
+     *
      * @param player the player that should be controlled by this service.
      */
     public void setActivePlayer(FlutterAVPlayer player) {
