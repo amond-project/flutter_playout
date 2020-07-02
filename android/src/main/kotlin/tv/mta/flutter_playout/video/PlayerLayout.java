@@ -782,7 +782,7 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
 
         @Override
         public void onPlayerStateChanged(EventTime eventTime, boolean playWhenReady, int playbackState) {
-
+            Log.d(TAG, "onPlayerStateChanged: " + eventTime.currentPlaybackPositionMs + ", " + playWhenReady + ", " + playbackState);
             if (playbackState == Player.STATE_READY) {
 
                 if (playWhenReady) {
@@ -795,11 +795,11 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
 
                         message.put("name", "onPlay");
 
-                        Log.d(TAG, "onPlay: []");
+                        Log.d(TAG, "onPlayerStateChanged: []");
                         eventSink.success(message);
 
                     } catch (Exception e) {
-                        Log.e(TAG, "onPlay: ", e);
+                        Log.e(TAG, "onPlay: Error ", e);
                     }
 
                 } else {
