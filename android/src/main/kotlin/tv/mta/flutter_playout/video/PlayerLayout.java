@@ -120,13 +120,13 @@ public class PlayerLayout extends PlayerView implements FlutterAVPlayer, EventCh
     private long mediaDuration = 0L;
 
     //Minimum Video you want to buffer while Playing
-    public final int MIN_BUFFER_DURATION = 2000;
+    public final int MIN_BUFFER_DURATION = 15000;
     //Max Video you want to buffer during PlayBack
-    public final int MAX_BUFFER_DURATION = 5000;
+    public final int MAX_BUFFER_DURATION = 30000;
     //Min Video you want to buffer before start Playing it
-    public final int MIN_PLAYBACK_START_BUFFER = 1500;
+    public final int MIN_PLAYBACK_START_BUFFER = 2500;
     //Min video You want to buffer when user resumes video
-    public final int MIN_PLAYBACK_RESUME_BUFFER = 2000;
+    public final int MIN_PLAYBACK_RESUME_BUFFER = 5000;
 
 
     /**

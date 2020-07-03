@@ -23,7 +23,12 @@ class VideoPlayout extends StatefulWidget {
 
 class _VideoPlayoutState extends State<VideoPlayout>
     with PlayerObserver, MultiAudioSupport {
-  final String _url = 'https://contents.amond.io/ko/before_your_eyes_stop/trailer01/Trailer01(FINAL)(0404).m3u8';
+    // final String _url = 'https://contents.amond.io/ko/before_your_eyes_stop/trailer01/new2/720p.m3u8';
+
+   final String _url = 'https://videodelivery.net/37a486cac35eb200eabe2801e5e31e1a/manifest/video.m3u8';
+
+  // final String _url = 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8';
+
   List<HLSManifestLanguage> _hlsLanguages = List<HLSManifestLanguage>();
 
   static const stream = const EventChannel('com.amond.eventchannelsample/stream');
